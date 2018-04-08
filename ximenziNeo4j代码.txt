@@ -1,0 +1,59 @@
+CREATE (CED:CED {title:'CED',bool:'Entity'})
+CREATE (FEA_model:FEA_model {title:'FEA_model',bool:'Entity'})
+CREATE (CED_Geometry:Geometry {title:'CED-Geometry',bool:'Attributes'})
+CREATE (CED_Drawing:Drawing {title:'CED-Drawing',bool:'Attributes'})
+CREATE (Bolt_24:Bolt_24 {title:'Bolt_24',bool:'Entity'})
+CREATE (Inner_Diffuser:Inner_Diffuser {title:'Inner_Diffuser',bool:'Entity'})
+CREATE (Outer_Diffuser:Outer_Diffuser {title:'Outer_Diffuser',bool:'Entity'})
+
+CREATE
+      (CED_Geometry)-[:D3_definition ]->(CED),
+	  (CED_Drawing)-[:D2_definition ]->(CED),
+	  (CED)-[:Validated_by ]->(FEA_model),
+	  (CED)-[:has_a_part_of ]->(Outer_Diffuser),
+	  (CED)-[:has_a_part_of ]->(Inner_Diffuser),
+	  (CED)-[:connected]->(Bolt_24)
+	  
+CREATE (HTC:HTC {title:'HTC',bool:'Entity',type:'Excel',String:'hello'})
+CREATE (Si3Dplus:FrameorProject {title:'FrameorProject',bool:'Attributes'})
+CREATE (t36:Am_Temp_ {title:'36',bool:'Attributes'})
+CREATE (l15MW_min:Load_Ramp {title:'15MW/min',bool:'Attributes'})
+CREATE (Thermal_BC_Loc:Attributes {title:'Thermal_BC_Loc',bool:'Attributes'})
+CREATE (BC_Si3D_T7_1122_36C_CED_FEA_xlsx_Sheet_CED_HTC:Data_File {title:'BC_Si3D_T7_1122_36C_CED_FEA_xlsx_Sheet_CED_HTC',bool:'Attributes'})
+
+	  CREATE
+      (HTC)-[:Thermal_loading_of ]->(FEA_model),
+	  (HTC)-[:Data_File ]->(BC_Si3D_T7_1122_36C_CED_FEA_xlsx_Sheet_CED_HTC),
+	  (HTC)-[:FrameorProject ]->(Si3Dplus),
+	  (HTC)-[:Load_Ramp ]->(l15MW_min),
+	  (HTC)-[:Am_Temp_ ]->(t36),
+	  (HTC)-[:Attributes ]->(Thermal_BC_Loc)
+	  
+CREATE (Pressure:Pressure {title:'Pressure',bool:'Entity'})
+CREATE (Mesh:Attributes {title:'Mesh',bool:'Attributes'})
+CREATE (Vane_loading:Vane_loading {title:'Vane_loading',bool:'Entity'})
+CREATE (Flow_Temp:Flow_Temp {title:'Flow_Temp',bool:'Entity'})
+CREATE (Structual_Constraints:Structual_Constraints {title:'Structual_Constraints',bool:'Entity'})
+
+CREATE
+      (Pressure)-[:Structure_loading_of ]->(FEA_model),
+	  (Mesh)-[:Attributes ]->(FEA_model),
+	  (Vane_loading)-[:Structure_loading_of ]->(FEA_model),
+	  (Flow_Temp)-[:hermal_loading_of ]->(FEA_model),
+	  (Structual_Constraints)-[:Constraints_at ]->(FEA_model)
+
+CREATE (Pressure_BC_Loc:Attributes {title:'Pressure_BC_Loc',bool:'Attributes'})
+CREATE
+      (Pressure_BC_Loc)-[:Attributes ]->(Pressure)
+	  
+	  
+CREATE (Vane_Force_Loc:Attributes {title:'Vane_Force_Loc',bool:'Attributes'})
+CREATE
+	(Vane_Force_Loc)-[:Attributes ]->(Vane_loading)
+	
+	
+CREATE (Bolt_24_Sketch:Size {title:'Bols_24_Sketch',bool:'Attributes'})
+CREATE
+	(Bolt_24)-[:has_size ]->(Bolt_24_Sketch),
+	(Bolt_24)-[:bolted_by ]->(Inner_Diffuser),
+	(Bolt_24)-[:connected ]->(Outer_Diffuser)
